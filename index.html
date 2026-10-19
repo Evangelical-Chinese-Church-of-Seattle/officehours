@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Office Hours</title>
+<meta name="apple-mobile-web-app-title" content="Office Hours">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#0b57d0">
+<script>
+  // Office Hours launcher. It gives phones a proper home-screen icon (Google's page around an Apps Script
+  // app can't), then forwards to the app. "#install" shows the steps instead of forwarding.
+  var APP = 'https://script.google.com/a/macros/eccseattle.org/s/AKfycbzYZr6aRw4kU97Kuzq7i9LwU1PkbrUYgNxDDGTJmPY7WW_IwPTs7TwvfWL4UflXEH4mgw/exec';
+  if (location.hash !== '#install') location.replace(APP + location.search);
+</script>
+<style>
+  :root { --bg: #f8fafd; --surface: #fff; --fg: #1f1f1f; --fg-2: #444746; --line: #e1e3e1; --primary: #0b57d0; --on-primary: #fff; }
+  @media (prefers-color-scheme: dark) { :root { --bg: #131314; --surface: #1e1f20; --fg: #e3e3e3; --fg-2: #c4c7c5; --line: #444746; --primary: #a8c7fa; --on-primary: #062e6f; } }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  main { max-width: 520px; margin: 0 auto; padding: 32px 16px 48px; }
+  .head { display: flex; gap: 16px; align-items: center; margin-bottom: 20px; }
+  .head img { width: 64px; height: 64px; border-radius: 16px; }
+  h1 { font-size: 24px; font-weight: 500; margin: 0; }
+  .sub { color: var(--fg-2); margin: 2px 0 0; font-size: 14px; }
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 16px 20px; margin-top: 16px; }
+  h2 { font-size: 17px; font-weight: 500; margin: 0 0 8px; }
+  ol { margin: 0; padding-left: 22px; } li { margin: 6px 0; }
+  .note { color: var(--fg-2); font-size: 14px; margin: 12px 0 0; }
+  .open { display: inline-block; margin-top: 20px; padding: 10px 20px; border-radius: 20px; background: var(--primary); color: var(--on-primary); text-decoration: none; font-weight: 500; }
+  .mine { border-color: var(--primary); }
+</style>
+</head>
+<body>
+<main hidden>
+  <div class="head"><img src="apple-touch-icon.png" alt=""><div><h1>Office Hours</h1><p class="sub">ECC Seattle staff schedule, leave and timesheets</p></div></div>
+  <p>Add a one-tap <b>Office Hours</b> icon to your home screen. Stay on this page and follow the steps for your phone.</p>
+  <section class="card" id="ios"><h2>iPhone</h2><ol>
+    <li>Make sure this page is open in <b>Safari</b> (or Chrome).</li>
+    <li>Tap the <b>Share</b> button: at the bottom of the screen in Safari, top right in Chrome.</li>
+    <li>Scroll down and tap <b>Add to Home Screen</b>, then <b>Add</b>.</li>
+  </ol></section>
+  <section class="card" id="android"><h2>Android</h2><ol>
+    <li>Make sure this page is open in <b>Chrome</b>.</li>
+    <li>Tap the menu <b>⋮</b> at the top right.</li>
+    <li>Tap <b>Add to Home screen</b> (or <b>Install app</b>), then <b>Add</b>.</li>
+  </ol></section>
+  <p class="note">Opened this from Gmail, Teams or another app? Open it in Safari or Chrome first; other apps can't add to the home screen. Already have an Office Hours icon? Remove the old one.</p>
+  <p class="note">The icon opens Office Hours. The first time, sign in with your eccseattle.org Google account.</p>
+  <a class="open" id="open" href="#">Open Office Hours</a>
+</main>
+<script>
+  if (location.hash === '#install') {
+    document.querySelector('main').hidden = false;
+    document.getElementById('open').href = APP;
+    var ua = navigator.userAgent, ios = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+    var mine = ios ? 'ios' : /Android/.test(ua) ? 'android' : '';
+    if (mine) { var el = document.getElementById(mine); el.classList.add('mine'); el.parentNode.insertBefore(el, document.getElementById('ios')); }
+    // The home-screen icon saves this page's address: drop "#install" so the icon opens the app.
+    history.replaceState(null, '', location.pathname + location.search);
+  }
+</script>
+</body>
+</html>
