@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Office Hours</title>
 <meta name="apple-mobile-web-app-title" content="Office Hours">
+<meta name="apple-mobile-web-app-capable" content="yes">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="manifest" href="manifest.webmanifest">
@@ -37,16 +38,23 @@
   .note { color: var(--fg-2); font-size: 14px; margin: 12px 0 0; }
   .open { display: inline-block; margin-top: 20px; padding: 10px 20px; border-radius: 20px; background: var(--primary); color: var(--on-primary); text-decoration: none; font-weight: 500; }
   .mine { border-color: var(--primary); }
+  .warn { border-color: #b3261e; } .warn p { margin: 0 0 8px; }
+  #installLink { width: 100%; padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; font: inherit; font-size: 14px; background: var(--bg); color: var(--fg); margin-bottom: 8px; }
+  #copy { padding: 8px 16px; border-radius: 18px; border: 1px solid var(--primary); background: none; color: var(--primary); font: inherit; font-weight: 500; }
 </style>
 </head>
 <body>
 <main hidden>
   <div class="head"><img src="apple-touch-icon.png" alt=""><div><h1>Office Hours</h1><p class="sub">ECC Seattle staff schedule, leave and timesheets</p></div></div>
+  <section class="card warn" id="chromeIos" hidden><h2>You’re in Chrome</h2>
+    <p>On iPhone, an icon added from Chrome always opens in Chrome. To use Safari, copy this link, open <b>Safari</b>, paste it into the address bar, and follow the steps there.</p>
+    <p><input id="installLink" readonly aria-label="Install page link"> <button type="button" id="copy">Copy link</button></p>
+  </section>
   <p>Add a one-tap <b>Office Hours</b> icon to your home screen. Stay on this page and follow the steps for your phone. When you tap <b>Add to Home Screen</b>, the preview should show the blue calendar icon; if it shows a different picture, cancel, come back to this page and try again.</p>
   <section class="card" id="ios"><h2>iPhone</h2><ol>
     <li>Make sure this page is open in <b>Safari</b> (or Chrome).</li>
     <li>Tap the <b>Share</b> button: at the bottom of the screen in Safari, top right in Chrome.</li>
-    <li>Scroll down and tap <b>Add to Home Screen</b>, then <b>Add</b>.</li>
+    <li>Scroll down and tap <b>Add to Home Screen</b>. Leave <b>Open as Web App</b> on (if you see it), then tap <b>Add</b>.</li>
   </ol></section>
   <section class="card" id="android"><h2>Android</h2><ol>
     <li>Make sure this page is open in <b>Chrome</b>.</li>
@@ -67,6 +75,17 @@
     var ua = navigator.userAgent, ios = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
     var mine = ios ? 'ios' : /Android/.test(ua) ? 'android' : '';
     if (mine) { var el = document.getElementById(mine); el.classList.add('mine'); el.parentNode.insertBefore(el, document.getElementById('ios')); }
+    // Chrome (and other apps) on iPhone: icons added there open in that app, not Safari.
+    if (ios && /CriOS|FxiOS|EdgiOS|GSA\//.test(ua)) {
+      var link = location.origin + location.pathname + '#install';
+      document.getElementById('chromeIos').hidden = false;
+      document.getElementById('installLink').value = link;
+      document.getElementById('copy').addEventListener('click', function () {
+        var btn = this, done = function () { btn.textContent = 'Copied'; };
+        if (navigator.clipboard) navigator.clipboard.writeText(link).then(done, function () { document.getElementById('installLink').select(); });
+        else { document.getElementById('installLink').select(); document.execCommand('copy'); done(); }
+      });
+    }
     // The home-screen icon saves this page's address: drop "#install" so the icon opens the app.
     history.replaceState(null, '', location.pathname + location.search);
   }
